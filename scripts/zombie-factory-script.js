@@ -24,6 +24,7 @@ async function main() {
   await zombieFactory.createRandomZombie("test");
   const [zombieName, zombieDna] = await zombieFactory.zombies(0);
   console.log("Zombie:", zombieName, zombieDna.toString());
+  
 }
 
 // We recommend this pattern to be able to use async/await everywhere
