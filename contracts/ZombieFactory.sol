@@ -1,16 +1,21 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.4;
 
-contract ZombieFactory {
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract ZombieFactory is Ownable {
 
     event NewZombie(uint id, string name, uint dna);
 
     uint dnaDigits = 16;
-    uint dnaModulus = 10 ** dnaDigits;  
+    uint dnaModulus = 10 ** dnaDigits;
+    uint cooldownTime = 1 days; 
 
     struct Zombie {
         string name;
         uint dna;
+        uint32 level;
+        uint32 readyTime;
     }
 
     Zombie[] public zombies;
@@ -19,7 +24,7 @@ contract ZombieFactory {
     mapping(address => uint) ownerZombieCount;
 
     function _createZombie(string memory _name, uint _dna) internal {
-        zombies.push(Zombie(_name, _dna));
+        zombies.push(Zombie(_name, _dna, 1, uint32(block.timestamp + cooldownTime)));
         uint id = zombies.length - 1;
         zombieToOwner[id] = msg.sender;
         ownerZombieCount[msg.sender]++;
